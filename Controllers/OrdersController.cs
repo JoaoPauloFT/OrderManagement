@@ -5,6 +5,7 @@ using OrderManagement.Models.DTOs;
 using OrderManagement.Models;
 using OrderManagement.Models.Enums;
 using Microsoft.AspNetCore.SignalR;
+using Azure.Messaging.ServiceBus;
 
 namespace OrderManagement.Controllers;
 
@@ -14,11 +15,15 @@ public class OrdersController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IHubContext<OrderHub> _hubContext;
+    private readonly ServiceBusClient _serviceBusClient;
+    private readonly string _queueName;
 
-    public OrdersController(AppDbContext context, IHubContext<OrderHub> hubContext)
+    public OrdersController(AppDbContext context, IHubContext<OrderHub> hubContext, ServiceBusClient serviceBusClient, IConfiguration config)
     {
         _context = context;
         _hubContext = hubContext;
+        _serviceBusClient = serviceBusClient;
+        _queueName = config.GetValue<string>("AzureServiceBus:QueueName");
     }
 
     // GET: api/orders
@@ -126,6 +131,14 @@ public class OrdersController : ControllerBase
 
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
+
+        var sender = _serviceBusClient.CreateSender(_queueName);
+        var message = new ServiceBusMessage(order.Id.ToString())
+        {
+            ContentType = "text/plain",
+            Subject = "OrderCreated"
+        };
+        await sender.SendMessageAsync(message);
 
         var orderDto = new OrderReadDto
         {

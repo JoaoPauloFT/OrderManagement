@@ -19,6 +19,13 @@ builder.Services.AddCors(options =>
         });
 });
 builder.Services.AddSignalR();
+builder.Services.AddSingleton(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var conn = config.GetValue<string>("AzureServiceBus:ConnectionString");
+    return new Azure.Messaging.ServiceBus.ServiceBusClient(conn);
+});
+builder.Services.AddHostedService<OrderProcessingWorker>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
