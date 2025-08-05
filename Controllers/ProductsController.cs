@@ -21,7 +21,18 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
-        return await _context.Products.ToListAsync();
+        var products = await _context.Products.ToListAsync();
+
+        var productDtos = products.Select(product => new ProductReadDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Amount = product.Amount,
+            CreatedAt = product.CreatedAt,
+            UpdatedAt = product.UpdatedAt
+        }).ToList();
+
+        return Ok(productDtos);
     }
 
     // GET: api/products/{id}
@@ -33,7 +44,16 @@ public class ProductsController : ControllerBase
         if (product == null)
             return NotFound();
 
-        return product;
+        var dto = new ProductReadDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Amount = product.Amount,
+            CreatedAt = product.CreatedAt,
+            UpdatedAt = product.UpdatedAt
+        };
+
+        return Ok(dto);
     }
 
     // POST: api/products

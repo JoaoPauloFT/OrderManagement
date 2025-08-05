@@ -21,7 +21,20 @@ public class ClientsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Client>>> GetClients()
     {
-        return await _context.Clients.ToListAsync();
+        var clients = await _context.Clients.ToListAsync();
+
+        var clientDtos = clients.Select(c => new ClientReadDto
+        {
+            Id = c.Id,
+            Name = c.Name,
+            Phone = c.Phone,
+            Email = c.Email,
+            BirthDate = c.BirthDate,
+            CreatedAt = c.CreatedAt,
+            UpdatedAt = c.UpdatedAt
+        }).ToList();
+
+        return Ok(clientDtos);
     }
 
     // GET: api/clients/{id}
@@ -33,7 +46,18 @@ public class ClientsController : ControllerBase
         if (client == null)
             return NotFound();
 
-        return client;
+        var dto = new ClientReadDto
+        {
+            Id = client.Id,
+            Name = client.Name,
+            Phone = client.Phone,
+            Email = client.Email,
+            BirthDate = client.BirthDate ?? null,
+            CreatedAt = client.CreatedAt,
+            UpdatedAt = client.UpdatedAt
+        };
+
+        return Ok(dto);
     }
 
     // POST: api/clients
