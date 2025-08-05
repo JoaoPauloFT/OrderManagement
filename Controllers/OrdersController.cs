@@ -4,6 +4,7 @@ using OrderManagement.Data;
 using OrderManagement.Models.DTOs;
 using OrderManagement.Models;
 using OrderManagement.Models.Enums;
+using Microsoft.AspNetCore.SignalR;
 
 namespace OrderManagement.Controllers;
 
@@ -12,10 +13,12 @@ namespace OrderManagement.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly IHubContext<OrderHub> _hubContext;
 
-    public OrdersController(AppDbContext context)
+    public OrdersController(AppDbContext context, IHubContext<OrderHub> hubContext)
     {
         _context = context;
+        _hubContext = hubContext;
     }
 
     // GET: api/orders
@@ -124,6 +127,34 @@ public class OrdersController : ControllerBase
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
+        var orderDto = new OrderReadDto
+        {
+            Id = order.Id,
+            TotalAmount = order.TotalAmount,
+            Status = order.Status,
+            CreatedAt = order.CreatedAt,
+            UpdatedAt = order.UpdatedAt,
+            Client = new ClientReadDto
+            {
+                Id = order.Client?.Id ?? Guid.Empty,
+                Name = order.Client?.Name ?? string.Empty,
+                Phone = order.Client?.Phone,
+                Email = order.Client?.Email ?? string.Empty,
+                BirthDate = order.Client?.BirthDate,
+                CreatedAt = order.Client?.CreatedAt ?? DateTime.MinValue,
+                UpdatedAt = order.Client?.UpdatedAt ?? DateTime.MinValue
+            },
+            Product = new ProductReadDto
+            {
+                Id = order.Product?.Id ?? Guid.Empty,
+                Name = order.Product?.Name ?? string.Empty,
+                Amount = order.Product?.Amount ?? 0,
+                CreatedAt = order.Product?.CreatedAt ?? DateTime.MinValue,
+                UpdatedAt = order.Product?.UpdatedAt ?? DateTime.MinValue
+            }
+        };
+        await _hubContext.Clients.All.SendAsync("ReceiveOrder", orderDto);
+
+        return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, orderDto);
     }
 }

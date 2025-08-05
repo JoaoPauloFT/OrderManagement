@@ -1,5 +1,6 @@
 ﻿using OrderManagement.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace OrderManagement.Models.DTOs;
 
@@ -7,6 +8,7 @@ public class OrderReadDto
 {
     public Guid Id { get; set; }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderStatus Status { get; set; }
 
     public ClientReadDto Client { get; set; } = null!;
