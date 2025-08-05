@@ -6,7 +6,7 @@ export default function OrdersTable() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5117/api/orders")
+    fetch("http://localhost:5000/api/orders")
       .then((res) => res.json())
       .then((data) => {
         setOrders(data);
@@ -14,7 +14,7 @@ export default function OrdersTable() {
       .catch((err) => console.error("Error /orders:", err));
       
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5117/orderHub")
+      .withUrl("http://localhost:5000/orderHub")
       .withAutomaticReconnect()
       .build();
 

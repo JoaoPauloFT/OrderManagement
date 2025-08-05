@@ -22,7 +22,7 @@ export default function OrderModal({ onClose, onSubmit }) {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5117/api/clients")
+    fetch("http://localhost:5000/api/clients")
       .then((res) => res.json())
       .then((data) => {
         const sorted = data.sort(
@@ -32,7 +32,7 @@ export default function OrderModal({ onClose, onSubmit }) {
       })
       .catch((err) => console.error("Error /clients:", err));
 
-    fetch("http://localhost:5117/api/products")
+    fetch("http://localhost:5000/api/products")
       .then((res) => res.json())
       .then((data) => {
         const sorted = data.sort(
