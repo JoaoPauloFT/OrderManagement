@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Client> Clients => Set<Client>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<Order> Orders => Set<Order>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,10 +25,20 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Client>().HasQueryFilter(c => !c.IsDeleted);
         modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
+        modelBuilder.Entity<Order>().HasQueryFilter(o => !o.IsDeleted);
 
         modelBuilder.Entity<Product>()
             .Property(p => p.Amount)
             .HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.TotalAmount)
+            .HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Status)
+            .HasConversion<string>();
+
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -48,6 +59,10 @@ public class AppDbContext : DbContext
                         product.CreatedAt = now;
                         product.UpdatedAt = now;
                         break;
+                    case Order order:
+                        order.CreatedAt = now;
+                        order.UpdatedAt = now;
+                        break;
                 }
             }
             else if (entry.State == EntityState.Modified)
@@ -59,6 +74,9 @@ public class AppDbContext : DbContext
                         break;
                     case Product product:
                         product.UpdatedAt = now;
+                        break;
+                    case Order order:
+                        order.UpdatedAt = now;
                         break;
                 }
             }
@@ -74,6 +92,11 @@ public class AppDbContext : DbContext
                     case Product product:
                         product.IsDeleted = true;
                         product.UpdatedAt = now;
+                        entry.State = EntityState.Modified;
+                        break;
+                    case Order order:
+                        order.IsDeleted = true;
+                        order.UpdatedAt = now;
                         entry.State = EntityState.Modified;
                         break;
                 }
