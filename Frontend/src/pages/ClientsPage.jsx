@@ -111,8 +111,8 @@ export default function ClientsPage() {
         showModal={showModal}
         onCancel={() => setShowModal(false)}
         client={client}
-        onSubmit={(client) => {
-          handleClient(client);
+        onSubmit={(cli) => {
+          handleClient(cli);
           setShowModal(false);
         }}
       />
