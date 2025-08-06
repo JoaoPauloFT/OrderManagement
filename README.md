@@ -2,13 +2,11 @@
 
 ## Sobre o projeto:
 
-O projeto em questão foi desenvolvido como uma PoC (Prova de Conceito), com o intuito de desenvolver e melhorar as minhas habilidades com as técnologias envolvidas. O sistema conta com o gerenciamento completo de Clientes e Produtos dentro do sistema, permitindo criar, editar, listar e excluir essas informações.
-
-Com essas informações, é possivel criar e listar pedidos de clientes em relação a um produto no sistema. A listagem desses pedidos são em tempo real e conta com a utilização do Azure Service Bus para a atualização dos status desses pedidos.
+Este projeto foi desenvolvido como uma PoC (Prova de Conceito) para aprimorar minhas habilidades nas tecnologias utilizadas. O sistema oferece gerenciamento completo de clientes e produtos, permitindo criar, editar, listar e excluir registros. Com esses dados, é possível gerar e acompanhar pedidos, cuja listagem ocorre em tempo real. Para atualização de status, o sistema utiliza o Azure Service Bus, garantindo sincronização ágil e precisa.
 
 ## O sistema:
 
-O sistema funciona através de API's feitas em  _.NET_ com _PostgreSQL_, que alimentam as telas responsivas feitas em _React_ e _TailwindCSS_ para a interação com o usuário. Dentro do sistema, também é utilizado o _Azure Service Bus_ como mensageiro para a atualização dos status dos pedidos, que são listados em tempo real no Front-end com a tecnologia _SignalR_ e _WebSockets_.
+O sistema é desenvolvido com APIs em _.NET_ integradas a um banco de dados _PostgreSQL_, que fornecem dados para interfaces responsivas criadas em _React_ e _TailwindCSS_. Para atualização de status dos pedidos, utiliza-se o _Azure Service Bus_ como mensageria, garantindo comunicação eficiente entre os serviços. No Front-end, as mudanças são exibidas em tempo real por meio do _SignalR_ e _WebSockets_, proporcionando uma experiência ágil e interativa ao usuário.
 
 ## Partes a melhorar/desenvolver:
 
@@ -19,10 +17,15 @@ O sistema funciona através de API's feitas em  _.NET_ com _PostgreSQL_, que ali
 ## Ilustrações do sistema:
 
 - Listagem de Pedidos:
+<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/b25b5049-7a6e-4658-8c0d-7d0cfa41ca0d" />
+
 
 - Modal de Cadastro e Edição de Clientes:
+<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/3abc82b3-a929-4408-ac1a-d36ee08b3f59" />
+
 
 - Swagger completo da Aplicação:
+<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/b34772f0-b046-40e1-91be-248239eb1035" />
 
 ## Como rodar:
 
