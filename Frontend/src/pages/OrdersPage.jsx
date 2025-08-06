@@ -4,7 +4,7 @@ import moment from "moment";
 import DataTable from "../components/DataTable";
 import OrderForm from "../components/OrderForm";
 
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:5000";
+const API_BASE = "http://localhost:5000";
 
 export default function OrdersPage() {
   const [showModal, setShowModal] = useState(false);
